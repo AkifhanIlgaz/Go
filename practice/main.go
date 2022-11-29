@@ -1,44 +1,29 @@
 package main
 
 import (
-	"bufio"
+	"errors"
 	"fmt"
-	"math"
 	"os"
-	"strconv"
-	"strings"
+
+	"github.com/pkg/errors"
 )
 
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-
-	fmt.Print("Please enter the first number: ");
-
-	firstInput, _ := reader.ReadString('\n');
-
-	firstOperand, err := strconv.ParseFloat(strings.TrimSpace(firstInput), 64)
-		
+func killServer(pidfile string) error {
+	file, err := os.Open(pidfile)
 	if err != nil {
-		panic("Please enter a number")
+		return err
 	}
 
-	fmt.Print("Please enter the second number: ")
+	defer file.Close()
 
-	secondInput, _:= reader.ReadString('\n');
-	
-	secondOperand, err := strconv.ParseFloat(strings.TrimSpace(secondInput), 64);
-
-	if err != nil {
-		panic("Please enter a number")
+	var pid int
+	if _,err := fmt.Fscanf(file, "%d", &pid); err != nil {
+		return errors.
 	}
 
-	
-	sum := firstOperand + secondOperand
-
-	sum = math.Round(sum * 100) / 100
-
-	fmt.Printf("%v + %v = %v\n\n", firstOperand, secondOperand, sum)
-	
+	fmt.Printf("Killing server with pid=%d\n", pid)
+	return nil
 }
 
 
+func main() {}
