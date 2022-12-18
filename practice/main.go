@@ -1,29 +1,17 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"os"
-
-	"github.com/pkg/errors"
+	"runtime"
 )
 
-func killServer(pidfile string) error {
-	file, err := os.Open(pidfile)
-	if err != nil {
-		return err
+func main() {
+	switch os := runtime.GOOS; os {
+	case "linux", "darwin", "unix":
+		fmt.Println("*nix variant")
+	case "windows":
+		fmt.Println("Windows")
+	default:
+		fmt.Printf("%s.\n", os)
 	}
-
-	defer file.Close()
-
-	var pid int
-	if _,err := fmt.Fscanf(file, "%d", &pid); err != nil {
-		return errors.
-	}
-
-	fmt.Printf("Killing server with pid=%d\n", pid)
-	return nil
 }
-
-
-func main() {}
